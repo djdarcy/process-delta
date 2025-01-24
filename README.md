@@ -2,7 +2,7 @@
 
 **psdelta** is a cross-platform tool for capturing snapshots of running processes and services, comparing them to find differences (a "delta"), and performing actions based on that delta. It can function like an automated “startup” folder—launching specific processes or services when you need them—or like a “shutdown” tool for quickly terminating unwanted processes and services to free up resources. 
 
-![desktop-init.py example on a Windows desktop](images/psdelta-example.jpg)
+![desktop-init.py example on a Windows desktop](images/psdelta-example.gif)
 
 ## Features
 
@@ -16,6 +16,9 @@
 - **Dependency Handling**: On Windows, service dependencies are resolved to ensure a correct stop/start order.
 - **Include/Exclude Filters**: Narrow down actions to specific processes/services.
 - **Delay and Confirm**: Wait between actions and optionally prompt for user confirmation.
+- **Fallback Execution**: Automatically attempts fallback options for failed executions.
+- **Skip Cmdline**: Optionally skips command-line arguments when launching processes.
+- **Once-Only Execution**: Ensures processes are launched only if not already running.
 
 ## Typical Use Cases
 
@@ -52,7 +55,7 @@ pip install psutil pywin32
 
 #### Option 2: pip install
 
-   This install psdelta.py into your Python environment:
+   This installs psdelta.py into your Python environment:
 
 ```
 pip install git+https://github.com/djdarcy/process-delta.git
@@ -81,7 +84,7 @@ Then invoke `psdelta` from anywhere.
 
 ##### Command Reference Table
 
-Include a clear table listing all commands and their functions:
+Below is a table listing all commands and their functions:
 
 | Command               | Description                                                  |
 | --------------------- | ------------------------------------------------------------ |
@@ -94,6 +97,10 @@ Include a clear table listing all commands and their functions:
 | `--confirm`           | Prompts for confirmation before executing each action.       |
 | `--revert`            | Inverts the meaning of the delta (e.g., starts processes that were stopped). |
 | `-d <ms>`             | Specifies a delay (in milliseconds) between actions.         |
+| `--fallback-exe`      | Enables fallback to exe-only if cmdline fails.               |
+| `--no-fallback-exe`   | Disables fallback to exe-only.                               |
+| `--skip-cmdline`      | Runs the exe without arguments (skips cmdline).              |
+| `--once-only`         | Ensures processes are only launched if not already running.  |
 
 ### Example Workflows
 
@@ -119,7 +126,7 @@ This can also be condensed into a single line:
 ```
 # Simplified command to create a delta
 
-psdelta.py delta -o startup_optimization_delta.json --wait --save-initial startup_snapshot.json --save-modified startup_optimized_snapshot.json
+psdelta.py delta --wait --save-initial startup_snapshot.json --save-modified startup_optimized_snapshot.json -o startup_optimization_delta.json
 ```
 
 #### Load a Delta and Close Processes
@@ -143,18 +150,18 @@ psdelta.py load -i delta.json -a run --revert --include "ExpressVPN*"
 
 While `psdelta.py` is the primary tool for managing processes and services, two additional helper scripts are included to address specific use cases:
 
-- **`conhost-parents.py`**: Traces the parent chain of `conhost.exe` processes, providing detailed insights into process relationships. This can be useful for debugging or analyzing process trees, especially when working with snapshots or deltas created by `psdelta.py`.
-- **`desktop-init.py`**: A simpler but more interactive tool to initialize a virtual desktop environment by ensuring specific shortcuts (`.lnk` files) are running on the active desktop. This complements `psdelta.py` by preparing the environment before snapshot creation or delta application. These scripts are optional but can enhance the workflow in more dynamic situations where only a smaller subset of processes are needed. For most use cases, focusing on `psdelta.py` will be sufficient. An example of how to use psdelta.py can be seen below (simply add *.lnks to programs in "`.\Desktop-Startup`" relative to the `desktop-init.py` script which can also be a sym-link to the install location).
+- **`desktop-init.py`**: A simpler but more interactive tool to initialize a virtual desktop environment by ensuring specific shortcuts (`.lnk` files) are running on the active desktop. This complements `psdelta.py` by preparing the environment before snapshot creation or delta application. These scripts are optional but can enhance the workflow in more dynamic situations where only a smaller subset of processes are needed. For most use cases, focusing on `psdelta.py` will be sufficient. An example of how to use psdelta.py can be seen below (simply add *.lnks to programs in "`./Desktop-Startup`" relative to the `desktop-init.py` script which can also be a sym-link to the install location).
 
 ![desktop-init.py example on a Windows desktop](images/desktop-init-example-setup.png)
-
+- **`helpers\conhost-parents.py`**: Traces the parent chain of `conhost.exe` processes, providing detailed insights into process relationships. This can be useful for debugging or analyzing process trees, especially when working with snapshots or deltas created by `psdelta.py`.
+- **`helpers\admintest.py`**: Checks if the shell has the necessary administrative priveleges to start services. This is for user/dev testing and is not called from `desktop-init.py`, `conhost-parents.py`, or from `psdelta.py`. 
 
 
 ## Contributing
 
 **psdelta** is primarily used in a Windows environment, but is designed to work in Linux, Mac, and BSD environments (stubs exist for other OSes). Issues, suggestions, and bug reports are all welcome. Please open an [issue](https://github.com/djdarcy/listall/issues) if you find something that can be improved. Or:
 
-1. Fork this repository and clone a fork.
+1. Fork this repository and clone it.
 2. Make changes on a new branch (e.g., `feature/new_action`).
 3. Submit a pull request describing your changes.
 
