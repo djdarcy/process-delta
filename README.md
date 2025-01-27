@@ -146,9 +146,15 @@ psdelta.py load -i delta.json -a run --revert --include "ExpressVPN*"
 
 - Runs previously stopped “ExpressVPN” processes/services.
 
+```
+psdelta.py load -a run -d 2000 -i startup_optimization_delta.json --revert --fallback-exe --once-only
+```
+
+- As seen in the example GIF above, runs the sequence in the json, reverting the actions skipping exe parameters ensuring a single instance per process or service restarted.
+
 ## **Related Helper Scripts**
 
-While `psdelta.py` is the primary tool for managing processes and services, two additional helper scripts are included to address specific use cases:
+While `psdelta.py` is the primary tool for managing processes and services, three additional helper scripts are included to address specific use cases:
 
 - **`desktop-init.py`**: A simpler but more interactive tool to initialize a virtual desktop environment by ensuring specific shortcuts (`.lnk` files) are running on the active desktop. This complements `psdelta.py` by preparing the environment before snapshot creation or delta application. These scripts are optional but can enhance the workflow in more dynamic situations where only a smaller subset of processes are needed. For most use cases, focusing on `psdelta.py` will be sufficient. An example of how to use psdelta.py can be seen below (simply add *.lnks to programs in "`./Desktop-Startup`" relative to the `desktop-init.py` script which can also be a sym-link to the install location).
 
