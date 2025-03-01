@@ -855,6 +855,7 @@ For more information and advanced usage, please refer to the documentation or us
 
     # Common arguments
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
+    parser.add_argument('-V', '--version', action='version', version=f'%(prog)s {VERSION_STRING}')
     parser.add_argument('--log-file', help='Specify a file to output logs')
 
     return parser.parse_args()
