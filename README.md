@@ -158,8 +158,6 @@ While `psdelta.py` is the primary tool for managing processes and services, thre
 
 - **`desktop-init.py`**: A simpler but more interactive tool to initialize a virtual desktop environment by ensuring specific shortcuts (`.lnk` files) are running on the active desktop. This complements `psdelta.py` by preparing the environment before snapshot creation or delta application. These scripts are optional but can enhance the workflow in more dynamic situations where only a smaller subset of processes are needed. For most use cases, focusing on `psdelta.py` will be sufficient. An example of how to use psdelta.py can be seen below (simply add *.lnks to programs in "`./Desktop-Startup`" relative to the `desktop-init.py` script which can also be a sym-link to the install location). The `ahk_scripts` folder has example scripts that can be used to launch the shortcuts in the `Desktop-Startup` folder. 
 
-```bash
-
 ![desktop-init.py example on a Windows desktop](images/desktop-init-example-setup.png)
 - **`helpers\conhost-parents.py`**: Traces the parent chain of `conhost.exe` processes, providing detailed insights into process relationships. This can be useful for debugging or analyzing process trees, especially when working with snapshots or deltas created by `psdelta.py`.
 - **`helpers\admintest.py`**: Checks if the shell has the necessary administrative priveleges to start services. This is for user/dev testing and is not called from `desktop-init.py`, `conhost-parents.py`, or from `psdelta.py`. 
